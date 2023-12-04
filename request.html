@@ -3,47 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fetch JSON on Mouse Click</title>
+  <title>Fetch Data and Populate Table</title>
 </head>
 <body>
 
-<button id="fetchButton">Fetch JSON</button>
+<button onclick="fetchAndPopulateTable()">Fetch Data</button>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>School</th>
+      <th>Program/Major</th>
+      <th>Type</th>
+      <th>Year Conferred</th>
+    </tr>
+  </thead>
+  <tbody id="dataTableBody">
+   
+  </tbody>
+</table>
 
 <script>
-document.getElementById('fetchButton').addEventListener('click', fetchData);
-
-function fetchData() {
+function fetchAndPopulateTable() {
   const apiUrl = 'https://imaginative-kulfi-dd988d.netlify.app/project.json';
 
-  // Step 1: Create a new XMLHttpRequest object
-  const xhr = new XMLHttpRequest();
+  fetch(apiUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Call a function to populate the table with the fetched data
+      populateTable(data);
+    })
+    .catch(error => {
+      console.error('Fetch error:', error);
+    });
+}
 
-  // Step 2: Configure it to make a GET request to the API endpoint
-  xhr.open('GET', apiUrl, true);
+function populateTable(data) {
+  // Get the table body element
+  const tableBody = document.getElementById('dataTableBody');
 
-  // Step 3: Set up the event listener to handle the response
-  xhr.onload = function () {
-    // Step 4: Check the status code of the response
-    if (xhr.status >= 200 && xhr.status < 300) {
-      // Step 5: Process the returned JSON data using JavaScript
-      const data = JSON.parse(xhr.responseText);
-      console.log('JSON Data:', data);
-      // Perform additional processing or display data on your webpage as needed
-    } else {
-      // Step 6: Handle errors, e.g., display an error message on your webpage
-      console.error('Error:', xhr.statusText);
-    }
-  };
+  // Clear existing table rows
+  tableBody.innerHTML = '';
 
-  // Step 7: Handle network errors
-  xhr.onerror = function () {
-    console.error('Network error occurred');
-  };
+  // Iterate over the data and add rows to the table
+  data.forEach(item => {
+    const row = document.createElement('tr');
+    const schoolCell = document.createElement('td');
+    const programCell = document.createElement('td');
+    const typeCell = document.createElement('td');
+    const yearCell = document.createElement('td');
 
-  // Step 8: Send the request
-  xhr.send();
+    // Add data to the cells
+    schoolCell.textContent = item.School;
+    programCell.textContent = item['Program/Major'];
+    typeCell.textContent = item.Type;
+    yearCell.textContent = item['Year conferred'];
+
+    // Append cells to the row
+    row.appendChild(schoolCell);
+    row.appendChild(programCell);
+    row.appendChild(typeCell);
+    row.appendChild(yearCell);
+
+    // Append row to the table body
+    tableBody.appendChild(row);
+  });
 }
 </script>
 
 </body>
+</html>
+
+</body>
+</html>
 </html>
