@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fetch JSON on Mouse Click</title>
+</head>
+<body>
+
+<button id="fetchButton">Fetch JSON</button>
+
+<script>
+document.getElementById('fetchButton').addEventListener('click', fetchData);
+
+function fetchData() {
+  const apiUrl = 'https://imaginative-kulfi-dd988d.netlify.app/project.json';
+
+  // Step 1: Create a new XMLHttpRequest object
+  const xhr = new XMLHttpRequest();
+
+  // Step 2: Configure it to make a GET request to the API endpoint
+  xhr.open('GET', apiUrl, true);
+
+  // Step 3: Set up the event listener to handle the response
+  xhr.onload = function () {
+    // Step 4: Check the status code of the response
+    if (xhr.status >= 200 && xhr.status < 300) {
+      // Step 5: Process the returned JSON data using JavaScript
+      const data = JSON.parse(xhr.responseText);
+      console.log('JSON Data:', data);
+      // Perform additional processing or display data on your webpage as needed
+    } else {
+      // Step 6: Handle errors, e.g., display an error message on your webpage
+      console.error('Error:', xhr.statusText);
+    }
+  };
+
+  // Step 7: Handle network errors
+  xhr.onerror = function () {
+    console.error('Network error occurred');
+  };
+
+  // Step 8: Send the request
+  xhr.send();
+}
+</script>
+
+</body>
+</html>
